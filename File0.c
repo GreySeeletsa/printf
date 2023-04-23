@@ -4,7 +4,6 @@ void print_buffer(char buffer[], int *buffer_index);
 /**
  * _printf - function
  * @format: parameter
- * @...: parameter
  * Return:  the number of characters printed
  * excluding the null byte used to end output to strings
  */
@@ -18,6 +17,7 @@ int _printf(const char *format, ...)
 
 	if (format == NULL)
 		return (-1);
+	
 	va_start(list, format);
 
 	for (a = 0; format && format[a] != '\0'; a++)
@@ -25,21 +25,21 @@ int _printf(const char *format, ...)
 		if (format[a] != '%')
 		{
 			buffer[buffer_index++] = format[a];
-			if (buffer_index == BUSS_SIZE)
+			if (buffer_index == BUFF_SIZE)
 				print_buffer(buffer, &buffer_index);
 			ptd_chars++;
 		}
 		else
 		{
 			print_buffer(buffer, &bufffer_index);
+			flags = get_flags(format, &a);
 			width = get_width(format, &a, list);
 			percision = get_percision(format, &a, list);
-			flags = get_flags(format, &a);
 			size = get_size(format, &a);
 			++a;
 			ptd = handle_print(format, &a, list, buffer, flags, width, precision, size);
 
-			if (printed == -1)
+			if (ptd == -1)
 				return (-1);
 			ptd_chars += ptd;
 		}
